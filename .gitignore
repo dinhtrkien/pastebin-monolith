@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+
+# System files
+.DS_Store
+
+# Editor settings
+.idea/
+*.iml
+
+# Build artifacts
+dist/
+build/
