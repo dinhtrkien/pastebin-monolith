@@ -1,0 +1,19 @@
+<!-- View for creating a paste -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Paste</title>
+  </head>
+  <body>
+    <h1>Create a Paste</h1>
+    <form action="/paste" method="POST">
+      <label for="content">Paste Content:</label><br/>
+      <textarea name="content" id="content"></textarea><br/><br/>
+
+      <label for="expirationTime">Expiration (e.g. 2025-12-31T23:59:59Z):</label><br/>
+      <input name="expirationTime" id="expirationTime" placeholder="Optional" /><br/><br/>
+
+      <button type="submit">Create Paste</button>
+    </form>
+  </body>
+</html>

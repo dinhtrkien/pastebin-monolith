@@ -1,0 +1,17 @@
+<!-- View for paste details -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Paste <%= paste.slug %></title>
+  </head>
+  <body>
+    <h1>Paste Content</h1>
+    <p><%= paste.content %></p>
+    <hr/>
+    <p>Views: <%= paste.viewsCount %></p>
+    <p>
+      Created At: <%= paste.createdAt.toISOString() %><br/>
+      Expiration Time: <%= paste.expirationTime ? paste.expirationTime.toISOString() : "None" %>
+    </p>
+  </body>
+</html>
