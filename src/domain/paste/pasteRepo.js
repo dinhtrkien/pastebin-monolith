@@ -1,5 +1,5 @@
 // Implementation of Paste repository
-const prismaClient = require("../../prisma/prismaClient.js");
+const prismaClient = require("../../../prisma/prismaClient.js");
 
 module.exports = {
   async createPaste(slug, content, expirationTime) {
