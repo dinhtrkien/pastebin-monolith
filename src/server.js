@@ -6,8 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: require('path').resolve(__dirname, '../.env') });
 
 // Import route files
-const pasteRoutes = require('./interfaces/routes/pasteRoutes');
-// const analyticsRoutes = require('./interfaces/routes/analyticsRoutes');
+const routes = require('./routes/index');
 
 // EJS setup
 app.set("view engine", "ejs");
@@ -22,12 +21,12 @@ app.use(express.urlencoded({ extended: true })); // for parsing form data
 app.use(express.static("public")); // serve static files if needed
 
 // Routes setup
-app.use("/", pasteRoutes);
+app.use("/", routes);
 // app.use("/analytics", analyticsRoutes);
 
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Monolithic app listening on port ${PORT}`);
+  console.log(`Monolithic app listening on port http://localhost:${PORT}`);
 });
