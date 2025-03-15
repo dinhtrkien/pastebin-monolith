@@ -24,6 +24,5 @@ model Analytics {
   views      Int      @default(0)
   pasteId    Int
   paste      Paste    @relation(fields: [pasteId], references: [id])
-
   @@index([pasteId, dateBucket])
 }
