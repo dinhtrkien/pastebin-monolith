@@ -7,7 +7,7 @@ This project uses JavaScript with the following styles:
 - Variables will be camelCase
 - Constants will be in all caps with underscores (i.e. `MAX_USERS`)
 - All functions will be in camelCase
-- All code files will be lower case with underscores.
+- All code files will be in camelCase
 - Markdown files will be lower case with hyphens.
 - All application logic will go in the `lib` directory
 - All configuration will be done with environment variables, using a `.env` file.
@@ -26,18 +26,18 @@ We are developing a Pastebin service for anonymous users. The service allows use
 
 ## **Monolithic Implementation**
 
-- **Objective**: 
-    - Build a single-tier application that incorporates all functionality: paste creation, retrieval, expiration, analytics, cleanup, and caching
-    - Develop a traditional monolithic application (without splitting into services or using external communication protocols like SOAP, REST, or gRPC for internal interactions).
-    - Use Postgre Database pre-populated with data for storing paste contents, metadata (expiration, creation timestamp, etc.), and analytics data.
-    - Provide a simple web interface and API endpoints for paste creation and retrieval.
+- **Objective**:
+  - Build a single-tier application that incorporates all functionality: paste creation, retrieval, expiration, analytics, cleanup, and caching
+  - Develop a traditional monolithic application (without splitting into services or using external communication protocols like SOAP, REST, or gRPC for internal interactions).
+  - Use Postgre Database pre-populated with data for storing paste contents, metadata (expiration, creation timestamp, etc.), and analytics data.
+  - Provide a simple web interface and API endpoints for paste creation and retrieval.
 
 ## Performance & Comparative Testing
 
 - **Test Scenario**: Design and execute performance tests to simulate different loads on your system. Use Locust to generate a range of concurrent requests.
 
 - **Metrics to Measure:**
-    - **Latency**: Average and peak response times.
-    - **Throughput**: Number of requests processed per second.
-    - **Resource Utilization**: Monitor CPU and RAM usage across different services.
-    - **Scalability**: Ability to handle increased loads without degradation.
+  - **Latency**: Average and peak response times.
+  - **Throughput**: Number of requests processed per second.
+  - **Resource Utilization**: Monitor CPU and RAM usage across different services.
+  - **Scalability**: Ability to handle increased loads without degradation.
