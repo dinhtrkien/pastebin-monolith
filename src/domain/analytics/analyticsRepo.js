@@ -1,73 +1,58 @@
-// Implementation of Analytics repository
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-
-/**
- * Chuẩn hóa `dateBucket` về đầu ngày (00:00:00)
- */
-const getTodayBucket = () => {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate()); // YYYY-MM-DD 00:00:00
-};
+const prismaClient = require("../../../prisma/prismaClient");
 
 class AnalyticsRepository {
-  /**
-   * Tăng lượt xem cho pasteId vào ngày hiện tại
-   */
-  async incrementViewCount(pasteId) {
-    const dateBucket = getTodayBucket();
+  // Add new analytics data
+  async createAnalytics(dateBucket, pasteId) {
+    return await prismaClient.analytics.create({
+      data: { dateBucket, pasteId },
+    });
+  }
 
-    const existingEntry = await prisma.analytics.findFirst({
-      where: { pasteId, dateBucket },
+  // Increment view count for analytics
+  async incrementViews(dateBucket, pasteId) {
+    const existingRecord = await prismaClient.analytics.findUnique({
+      where: { pasteId_dateBucket_unique: { pasteId, dateBucket } },
     });
 
-    if (existingEntry) {
-      return await prisma.analytics.update({
-        where: { id: existingEntry.id },
+    if (existingRecord) {
+      return await prismaClient.analytics.update({
+        where: { pasteId_dateBucket_unique: { pasteId, dateBucket } },
         data: { views: { increment: 1 } },
       });
     } else {
-      return await prisma.analytics.create({
-        data: { pasteId, dateBucket, views: 1 },
+      return await prismaClient.analytics.create({
+        data: { dateBucket, pasteId, views: 1 },
       });
     }
   }
 
-  /**
-   * Lấy tổng số lượt xem theo tháng và trả về ngày có lượt xem cao nhất
-   */
-  async getMonthlyAnalytics(pasteId, year, month) {
-    const startDate = new Date(year, month - 1, 1); // Ngày đầu tháng
-    const endDate = new Date(year, month, 0); // Ngày cuối tháng
+  // Get analytics by pasteId
+  async getAnalyticsByPasteId(pasteId) {
+    return await prismaClient.analytics.findMany({
+      where: { pasteId },
+      orderBy: { dateBucket: "asc" },
+    });
+  }
 
-    // Lấy dữ liệu lượt xem theo ngày trong tháng
-    const analytics = await prisma.analytics.findMany({
+  // Delete analytics by ID
+  async deleteAnalytics(id) {
+    return await prismaClient.analytics.delete({
+      where: { id },
+    });
+  }
+
+  // Get monthly analytics for a paste
+  async getAnalyticsForMonth(pasteId, month, year) {
+    const startDate = new Date(year, month - 1, 1); // Start of the month
+    const endDate = new Date(year, month, 1); // Start of the next month
+
+    return await prismaClient.analytics.findMany({
       where: {
         pasteId,
-        dateBucket: {
-          gte: startDate,
-          lte: endDate,
-        },
+        dateBucket: { gte: startDate, lt: endDate },
       },
-      orderBy: { dateBucket: 'asc' },
+      orderBy: { dateBucket: "asc" },
     });
-
-    // Tìm ngày có lượt xem nhiều nhất
-    let maxViews = 0;
-    let mostViewedDay = null;
-
-    analytics.forEach(({ dateBucket, views }) => {
-      if (views > maxViews) {
-        maxViews = views;
-        mostViewedDay = dateBucket;
-      }
-    });
-
-    return {
-      analytics,
-      mostViewedDay,
-      maxViews,
-    };
   }
 }
 

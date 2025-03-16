@@ -14,15 +14,14 @@ model Paste {
   createdAt      DateTime @default(now())
   expirationTime DateTime?
   viewsCount     Int      @default(0)
-
   analytics Analytics[]
 }
 
 model Analytics {
   id         Int      @id @default(autoincrement())
-  dateBucket DateTime
+  dateBucket Date
   views      Int      @default(0)
   pasteId    Int
   paste      Paste    @relation(fields: [pasteId], references: [id])
-  @@index([pasteId, dateBucket])
+  @@unique([pasteId, dateBucket], name: "pasteId_dateBucket_unique")
 }
