@@ -1,5 +1,4 @@
-// src/domain/paste/pasteController.js
-const pasteService = require("./PasteService");
+const pasteService = require("./pasteService.js");
 
 module.exports = {
   showCreatePastePage(req, res) {
@@ -9,8 +8,50 @@ module.exports = {
 
   async createPaste(req, res) {
     try {
-      const { content, expirationTime } = req.body; 
-      const newPaste = await pasteService.createPaste(content, expirationTime ? new Date(expirationTime) : null);
+      const { content, expirationType } = req.body;
+      
+      // Convert expiration type to actual date
+      let expirationTime = null;
+      const now = new Date();
+      
+      switch (expirationType) {
+        case "burn": // Keep for backward compatibility
+        case "1m":
+          expirationTime = new Date(now.getTime() + 1 * 60 * 1000);
+          break;
+        case "5m":
+          expirationTime = new Date(now.getTime() + 5 * 60 * 1000);
+          break;
+        case "10m":
+          expirationTime = new Date(now.getTime() + 10 * 60 * 1000);
+          break;
+        case "1h":
+          expirationTime = new Date(now.getTime() + 60 * 60 * 1000);
+          break;
+        case "1d":
+          expirationTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+          break;
+        case "1w":
+          expirationTime = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+          break;
+        case "2w":
+          expirationTime = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+          break;
+        case "1mo":
+          expirationTime = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+          break;
+        case "6mo":
+          expirationTime = new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000);
+          break;
+        case "1y":
+          expirationTime = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+          break;
+        default:
+          expirationTime = null; // "never"
+      }
+      
+      const newPaste = await pasteService.createPaste(content, expirationTime);
+      
       // Redirect to the detail page
       res.redirect(`/paste/${newPaste.slug}`);
     } catch (error) {
@@ -25,7 +66,7 @@ module.exports = {
       const paste = await pasteService.getPaste(slug);
 
       if (!paste) {
-        return res.status(404).send("Paste not found or expired");
+        return res.status(404).render("notFoundView");
       }
 
       res.render("detailPasteView", { paste });

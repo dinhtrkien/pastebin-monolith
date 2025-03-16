@@ -1,1 +1,0 @@
-// Service for cleanup pastes
