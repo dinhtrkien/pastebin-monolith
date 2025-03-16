@@ -1,0 +1,16 @@
+<!-- cleanupView.ejs (View - Displays cleanup status) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleanup Status</title>
+</head>
+<body>
+    <h1>Cleanup Service</h1>
+    <p>Last cleanup run: <%= lastCleanupTime %></p>
+    <form action="/cleanup" method="POST">
+        <button type="submit">Run Cleanup</button>
+    </form>
+</body>
+</html>
