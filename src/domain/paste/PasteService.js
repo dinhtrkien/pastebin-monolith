@@ -1,5 +1,5 @@
 // Service for Paste domain
-const pasteRepo = require("./pasteRepo.js");
+const pasteRepo = require("./pasteRepo");
 
 // Generate a short random slug (6 chars). You can replace with any short-URL library.
 function generateSlug() {
