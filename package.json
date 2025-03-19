@@ -15,9 +15,11 @@
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "nanoid": "^5.1.5",
     "node-cron": "^3.0.3",
     "pastebin-monolith": "file:",
-    "prisma": "^6.5.0"
+    "prisma": "^6.5.0",
+    "redis": "^4.7.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
