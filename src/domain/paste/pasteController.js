@@ -1,4 +1,4 @@
-const pasteService = require("./PasteService");
+const pasteService = require("./pasteService.js");
 
 module.exports = {
   showCreatePastePage(req, res) {

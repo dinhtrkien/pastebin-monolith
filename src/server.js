@@ -8,6 +8,9 @@ dotenv.config({ path: require('path').resolve(__dirname, '../.env') });
 // Import route files
 const routes = require('./routes/index');
 
+// Import cleanup service
+const cleanupService = require('./domain/cleanup/cleanupService');
+
 // EJS setup
 app.set("view engine", "ejs");
 app.set("views", [
@@ -24,6 +27,8 @@ app.use(express.static("public")); // serve static files if needed
 app.use("/", routes);
 // app.use("/analytics", analyticsRoutes);
 
+// Initialize cleanup service
+cleanupService.initialize();
 
 const PORT = process.env.PORT || 5000;
 
