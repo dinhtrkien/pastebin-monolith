@@ -1,14 +1,15 @@
 // Service for Paste domain
 const pasteRepo = require("./pasteRepo");
+const slugGeneratorService = require("../slugGenerator/slugGeneratorService.js")(pasteRepo);
 
-// Generate a short random slug (6 chars). You can replace with any short-URL library.
-function generateSlug() {
-  return Math.random().toString(36).substr(2, 6);
-}
+// // Generate a short random slug (6 chars)
+// function generateSlug() {
+//   return Math.random().toString(36).substr(2, 6);
+// }
 
 module.exports = {
   async createPaste(content, expirationTime) {
-    const slug = generateSlug();
+    const slug = await slugGeneratorService.generateUniqueSlug();
     const paste = await pasteRepo.createPaste(slug, content, expirationTime);
     return paste;
   },
