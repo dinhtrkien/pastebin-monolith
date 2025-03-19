@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const prismaClient = require('../../../prisma/prismaClient.js');
+const cacheService = require('../cache/cacheService.js');
 
 // Constants
 const BATCH_SIZE = 1000;
@@ -81,6 +82,11 @@ class CleanupService {
 
         // Extract IDs for deletion
         const pasteIds = expiredPastes.map(paste => paste.id);
+
+        // Clear cache entries for expired pastes
+        for (const paste of expiredPastes) {
+          await cacheService.delete(paste.slug);
+        }
         
         // Delete the batch
         const deleteResult = await prismaClient.paste.deleteMany({
