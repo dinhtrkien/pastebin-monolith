@@ -18,9 +18,9 @@ module.exports = {
     if (!paste) return null;
     
     // Check if paste is expired (maybe dont delete it, just mark as expired)
-    // Implement a cron job to delete expired pastes periodically
+    // Implement a cron job to delete expired pastes periodically (Done in cleanupService.js)
     if (paste.expirationTime && new Date() > new Date(paste.expirationTime)) {
-      await pasteRepo.deletePaste(slug); // to be reviewed
+      // await pasteRepo.deletePaste(slug); // bad practice
       return null;
     }
 
