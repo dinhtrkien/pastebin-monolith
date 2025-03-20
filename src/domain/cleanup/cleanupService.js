@@ -71,7 +71,7 @@ class CleanupService {
               not: null
             }
           },
-          select: { id: true },
+          select: { id: true, slug: true },
           take: BATCH_SIZE
         });
 
@@ -82,13 +82,20 @@ class CleanupService {
 
         // Extract IDs for deletion
         const pasteIds = expiredPastes.map(paste => paste.id);
+        
+        // Delete analytics data for expired pastes first
+        await prismaClient.analytics.deleteMany({
+          where: {
+            pasteId: { in: pasteIds }
+          }
+        });
 
         // Clear cache entries for expired pastes
         for (const paste of expiredPastes) {
           await cacheService.delete(paste.slug);
         }
         
-        // Delete the batch
+        // Delete the batch of pastes
         const deleteResult = await prismaClient.paste.deleteMany({
           where: {
             id: { in: pasteIds }
@@ -96,7 +103,7 @@ class CleanupService {
         });
 
         totalDeleted += deleteResult.count;
-        console.log(`Batch ${batchCount}: Deleted ${deleteResult.count} expired pastes`);
+        console.log(`Batch ${batchCount}: Deleted ${deleteResult.count} expired pastes and their analytics data`);
         
         // If we got fewer results than the batch size, we're done
         if (expiredPastes.length < BATCH_SIZE) {
@@ -107,7 +114,7 @@ class CleanupService {
         }
       }
 
-      console.log(`Cleanup completed: ${totalDeleted} expired pastes deleted in ${batchCount} batches`);
+      console.log(`Cleanup completed: ${totalDeleted} expired pastes and their analytics deleted in ${batchCount} batches`);
       return totalDeleted;
     } catch (error) {
       console.error('Error during paste cleanup:', error);
