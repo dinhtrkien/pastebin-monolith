@@ -5,15 +5,25 @@ class AnalyticsController {
 
     async getAnalytics(req, res) {
         try {
-            const pasteId = 1;
-            const month = 3;
-            const year = 2025;   
+            
             res.render("analyticsView")
         } catch (error) {
             console.error(error);
             res.status(500).send("Error retrieving analytics");
         }
     }
+
+    async getAnalyticsData(req, res) {
+        try {
+            const analyticsData = await analyticsService.getAnalyticsForMonth(pasteId, month, year);
+            res.json(analyticsData);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Error retrieving analytics data");
+        }
+    }
+
+
 }
 
 module.exports =  new AnalyticsController();
