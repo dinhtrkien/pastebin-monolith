@@ -15,6 +15,7 @@ module.exports = {
   async createPaste(content, expirationTime) {
     const slug = await slugGeneratorService.generateUniqueSlug();
     const paste = await pasteRepo.createPaste(slug, content, expirationTime);
+    paste.viewsCount = 1; // Initialize view count
 
     // Cache the newly created paste
     await cacheService.set(slug, paste, CACHE_TTL);
