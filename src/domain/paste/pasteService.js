@@ -3,6 +3,8 @@ const pasteRepo = require("./pasteRepo");
 const slugGeneratorService =
   require("../slugGenerator/slugGeneratorService.js")(pasteRepo);
 const cacheService = require("../cache/cacheService.js");
+const analyticsService = require("../analytics/AnalyticsService.js");
+
 
 // // Generate a short random slug (6 chars)
 // function generateSlug() {
@@ -15,9 +17,9 @@ module.exports = {
   async createPaste(content, expirationTime) {
     const slug = await slugGeneratorService.generateUniqueSlug();
     const paste = await pasteRepo.createPaste(slug, content, expirationTime);
-
     // Cache the newly created paste
     await cacheService.set(slug, paste, CACHE_TTL);
+    
 
     return paste;
   },
@@ -37,10 +39,16 @@ module.exports = {
         return null;
       }
 
+      analyticsService.incrementViews(new Date(), cachedPaste.id).catch((err) => {
+        console.error(`Failed to increment views for ${slug}:`, err);
+      }
+      );
+
       // Update view count in database but don't wait for it (fire and forget)
       this._incrementPasteViews(slug, cachedPaste).catch((err) => {
         console.error(`Failed to increment views for ${slug}:`, err);
       });
+
 
       return cachedPaste;
     }
@@ -63,6 +71,7 @@ module.exports = {
 
     // Increment views
     await pasteRepo.incrementViews(slug);
+    analyticsService.incrementViews(new Date(), paste.id);
     paste.viewsCount += 1; // update local copy
 
     // Cache the paste for future requests

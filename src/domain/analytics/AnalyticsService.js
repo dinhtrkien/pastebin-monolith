@@ -19,6 +19,8 @@ class AnalyticsService {
    * @returns {Promise<Object>}
    */
   async incrementViews(dateBucket, pasteId) {
+    console.log("dateBucket", dateBucket);
+    console.log("pasteId", pasteId);
     dateBucket.setHours(0, 0, 0, 0);
     return await analyticsRepo.incrementViews(dateBucket, pasteId);
   }
